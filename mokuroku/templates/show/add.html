@@ -1,0 +1,15 @@
+{% extends "base/main.html" %}
+{% block head %}
+<script src="{{ url_for("static", filename="js/calendarDateInput.js") }}"></script>
+{% endblock %}
+{% block body %}
+{{ status }}
+<form method="POST">
+	<input type="text" name="title" placeholder="title"></input>
+	<textarea name="description" placeholder="description"></textarea>
+	<input type="text" name="total" placeholder="#"></input>
+	begin: <script>DateInput('begin_date', false, "DD-MM-YYYY");</script>
+	end: <script>DateInput('end_date', false, "DD-MM-YYYY");</script>
+	<button>create</button>
+</form>
+{% endblock %}

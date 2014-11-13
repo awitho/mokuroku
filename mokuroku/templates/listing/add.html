@@ -1,0 +1,29 @@
+{% extends "base/main.html" %}
+{% block body %}
+{{ status }}
+<form method="POST">
+	show <a href="{{ url_for("show.add") }}"><img src="{{ url_for("static", filename="imgs/add.png") }}"/></a>:
+	<select name="show">
+		<option value="0">---</option>
+		{% for sh in shows %}
+			<option value="{{ sh.id }}" {% if sh.id|int == show|int %}selected{% endif %}>{{ sh.title }}</option>
+		{% endfor %}
+	</select>
+	category <a href="{{ url_for("category.add") }}"><img src="{{ url_for("static", filename="imgs/add.png") }}"/></a>:
+	<select name="category">
+		<option value="0">---</option>
+		{% for cat in categories %}
+			<option value="{{ cat.id }}" {% if cat.id|int == category|int %}selected{% endif %}>{{ cat.name }}</option>
+		{% endfor %}
+	</select>
+	episode:
+	<input type="text" name="episodes" placeholder="#"></input>
+	rating:
+	<select name="rating">
+		{% for i in range(1, 11)[::-1] %}
+			<option value="{{ i }}" {% if i == 5 %}selected{% endif %}>{{ i }}: {{ ratings[i] }}</option>
+		{% endfor %}
+	</select>
+	<button>create</button>
+</form>
+{% endblock %}

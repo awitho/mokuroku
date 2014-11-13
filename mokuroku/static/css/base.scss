@@ -1,0 +1,94 @@
+/// *** RESET STOCK ELEMENTS *** ///
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+
+	h1, h2, h3, h4, h5 {
+		margin: 0;
+	}
+
+	p {
+		margin: 0;
+	}
+}
+
+/// *** GLOBAL STYLES *** ///
+body {
+	img {
+		vertical-align: middle;
+	}
+}
+
+$link-color: rgb(120, 120, 120);
+
+/// *** STYLE CUSTOM ELEMENTS *** ///
+body {
+	input[type=text], textarea {
+		//width: 200px;
+	}
+
+	table, textarea {
+		vertical-align: bottom;
+	}
+
+	textarea {
+		height: 17px;
+	}
+
+	a {
+		&:hover {
+			color: lighten($link-color, 25%);
+		}
+
+		text-decoration: none;
+		color: $link-color;
+	}
+
+	.table {
+		display: table;
+	}
+
+	.vcenter {
+		vertical-align: middle;
+	}
+
+	.center {
+		text-align: center;
+	}
+
+	.cell {
+		display: table-cell;
+	}
+
+	.fill {
+		width: 100vw;
+		height: 100vh;
+	}
+
+	.title {
+		font-weight: 1000;
+		font-size: 64px;
+	}
+
+	.dateinput {
+		input[type=text] {
+			width: auto;
+		}
+
+		width: auto;
+		display: inline-block;
+	}
+
+	.content {
+		margin: 5px;
+	}
+
+	.category {
+		font-size: 2em;
+	}
+
+	.category .buttons, .listing .buttons {
+		display: none;
+	}
+}

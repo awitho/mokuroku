@@ -1,0 +1,3 @@
+DEBUG = True
+SECRET_KEY = "SECRET_KEY123"
+DATABASE = "listings.db"

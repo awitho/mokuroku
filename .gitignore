@@ -1,0 +1,16 @@
+# Specific directories
+
+
+# Folder lint
+__pycache__
+.sass-cache
+
+# File lint
+*.db
+*.map
+*.sublime-*
+*.zip
+*.pyc
+*.css
+*.exe
+# No compiled python files :<

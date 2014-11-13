@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>{% block title %}mokuroku{% endblock %}</title>
+	<link rel="stylesheet" href="{{ url_for("static", filename="css/base.css") }}"/>
+	{% block head %}
+	{% endblock %}
+</head>
+<body>
+<div class="table fill">
+	<div class="cell vcenter center">
+		<div class="title">{% block page_title %}{% if title %}{{ title }}{% else %}{{ request.endpoint }}{% endif %}{% endblock %}</div>
+		<div class="content">
+			{% block body %}
+			{% endblock %}
+		</div>
+		<div class="links">{% block links %}{% endblock %}</div>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+{% extends "base/main.html" %}
+
+{% block links %}
+{% if category %}
+<a href="{{ url_for("listings.add", category=category.id) }}"><img src="{{ url_for("static", filename="imgs/add.png") }}"/></a>
+<a class="remove" href="{{ url_for("category.remove", category=category.id) }}">
+	<img src="{{ url_for("static", filename="imgs/delete.png") }}"/>
+</a>
+{% else %}
+<a href="{{ url_for("listings.add") }}"><img src="{{ url_for("static", filename="imgs/add.png") }}"/></a>
+{% endif %}
+{% endblock %}
+
+{% block body %}
+{% for listing in listings %}
+{% if "heading" in listing %}
+<div class="category listing" id="category_{{ listing.category.id }}">
+	<span class='entry'>
+		<a href="{{ url_for("category.root", category=listing.category.name) }}">{{ listing.category.name }}</a>
+	</span>
+	<span class='buttons'>
+		<a class="remove" for="category_{{ listing.category.id }}" href="{{ url_for("category.remove", id=listing.id) }}">
+			<img src="{{ url_for("static", filename="imgs/delete.png") }}"/>
+		</a>
+	</span>
+</div>
+{% else %}
+<div class="listing" id="listing_{{ listing.id }}">
+	<span class="entry">
+		<a href="{{ url_for("show.root", id=listing.show.id) }}">{{ listing.show.title }}</a>
+		●
+		<span class='episodes'>
+			<span class='watched'>{{ listing.episodes }}</span>{% if listing.show.total %} / <span class='total'>{{ listing.show.total }}</span>{% endif %}
+		</span>
+		●
+		<span class='rating'>{{ listing.rating }}</span>
+	</span>
+	<span for="listing_{{ listing.id }}" class="buttons">
+		<a class="increment" for="listing_{{ listing.id }}" href="{{ url_for("listings.increment", id=listing.id) }}">
+			<img src="{{ url_for("static", filename="imgs/add.png") }}"/>
+		</a>
+		<a class="edit" for="listing_{{ listing.id }}" href="{{ url_for("listings.edit", id=listing.id) }}">
+			<img src="{{ url_for("static", filename="imgs/pencil.png") }}"/>
+		</a>
+		<a class="remove" for="listing_{{ listing.id }}" href="{{ url_for("listings.remove", id=listing.id) }}">
+			<img src="{{ url_for("static", filename="imgs/delete.png") }}"/>
+		</a>
+	</span>
+</div>
+{% endif %}
+{% endfor %}
+
+<script type="text/javascript">
+	listings = [].slice.call(document.getElementsByClassName("listing"));
+
+	listings.forEach(function(listing) {
+		var entry = listing.getElementsByClassName("entry")[0];
+		var buttons = listing.getElementsByClassName("buttons")[0];
+
+		entry.onmouseenter = function(e) {
+			listing.timeout = setTimeout(function() {
+				buttons.style.display = "inline-block";
+			}, 500);
+		};
+
+		listing.onmouseleave = function(e) {
+			clearTimeout(this.timeout);
+			buttons.style.display = "none";
+		};
+	});
+</script>
+{% endblock %}

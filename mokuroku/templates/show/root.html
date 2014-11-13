@@ -1,0 +1,23 @@
+{% extends "base/main.html" %}
+{% block links %}
+<a class="increment" href="{{ url_for("listings.increment", show=show.id) }}">
+	<img src="{{ url_for("static", filename="imgs/add.png") }}"/>
+</a>
+<a class="edit" href="{{ url_for("show.edit", id=show.id) }}">
+	<img src="{{ url_for("static", filename="imgs/pencil.png") }}"/>
+</a>
+<a class="remove" href="{{ url_for("show.remove", id=show.id) }}">
+	<img src="{{ url_for("static", filename="imgs/delete.png") }}"/>
+</a>
+{% endblock %}
+{% block page_title %}
+show: {{ show.title }}
+{% endblock %}
+{% block body %}
+{% if empty %}
+no info
+{% else %}
+has info
+{{ show }}
+{% endif %}
+{% endblock %}
