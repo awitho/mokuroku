@@ -46,6 +46,9 @@ class Database(_Database):
 	def remove_show(self, id):
 		return self.query("DELETE FROM shows WHERE id=?;", args=(id,), one=True)
 
+	def update_show(self, id, description, total, begin_date, end_date):
+		return self.query("UPDATE shows SET description=?, total=?, begin_date=?, end_date=? WHERE id=?;", args=(description, total, begin_date, end_date, id), one=True)
+
 	def get_show_by_id(self, id):
 		return self.query("SELECT * FROM shows WHERE id=?;", args=(id,), one=True)
 
@@ -61,10 +64,11 @@ class Database(_Database):
 		return self.query("UPDATE categories SET count=count+? WHERE id=?;", args=(num, id), one=True)
 
 	def remove_category(self, id):
-		# Sqlite should handle this, with foreign keys.
-		#for row in self.get_listings_in_category(id):
-		#	self.remove_listing(row['row_id'])
-		return self.query("DELETE FROM categories WHERE id=?;", args=(id,), one=True)
+		# Sqlite should handle this, with foreign keys. PROTIP: IT DOESN'T
+		self.query("DELETE FROM categories WHERE id=?;", args=(id,), one=True)
+		for row in self.get_listings_in_category(id):
+			self.remove_listing(row['show'])
+		return True
 
 	def get_category_by_id(self, id):
 		return self.query("SELECT * FROM categories WHERE id=?;", args=(id,), one=True)
@@ -81,15 +85,21 @@ class Database(_Database):
 		self.query("INSERT INTO listings (category, show, episodes, rating) values (?, ?, ?, ?);", args=(category, show, episodes, rating), one=True)
 		return self.rowid
 
+	def update_listing(self, id, category, episodes, rating):
+		return self.query("UPDATE listings SET category=?, episodes=?, rating=? WHERE show=?;", args=(category, episodes, rating, id), one=True)
+
+	def increment_listing(self, id, num):
+		return self.query("UPDATE listings SET episodes=episodes+? WHERE show=?;", args=(num, id), one=True)
+
 	def remove_listing(self, id):
 		self.modify_category(self.get_listing_by_id(id)['category'], -1)
-		return self.query("DELETE FROM listings WHERE id=?;", args=(id,), one=True)
+		return self.query("DELETE FROM listings WHERE show=?;", args=(id,), one=True)
 
 	def get_listing_by_id(self, id):
-		return self.query("SELECT * FROM listings WHERE id=?;", args=(id,), one=True)
+		return self.query("SELECT * FROM listings WHERE show=?;", args=(id,), one=True)
 
 	def get_listing_by_show_id(self, id):
-		return self.query("SELECT * FROM listings WHERE show=?;", args=(id,), one=True)
+		return self.get_listing_by_id(id)
 
 	def get_listings_in_category(self, id):
 		return self.query("SELECT * FROM listings WHERE category=?;", args=(id,))

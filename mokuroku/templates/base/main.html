@@ -15,7 +15,14 @@
 			{% block body %}
 			{% endblock %}
 		</div>
-		<div class="links">{% block links %}{% endblock %}</div>
+		<div class="links">
+			{% block links %}{% endblock %}
+			{% if request.endpoint != "routes.root" %}
+			<a href="{{ url_for("routes.root") }}">
+				<img src="{{ url_for("static", filename="imgs/root.png") }}"/>
+			</a>
+			{% endif %}
+		</div>
 	</div>
 </div>
 </body>

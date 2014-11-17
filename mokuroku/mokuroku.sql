@@ -20,12 +20,10 @@ CREATE TABLE shows (
 
 -- Table: listings
 CREATE TABLE listings (
-    id       INTEGER PRIMARY KEY,
     category INTEGER NOT NULL
                      REFERENCES categories ( id ) ON DELETE CASCADE
                                                   ON UPDATE CASCADE,
-    show     INTEGER NOT NULL
-                     UNIQUE
+    show     INTEGER PRIMARY KEY
                      REFERENCES shows ( id ) ON DELETE CASCADE
                                              ON UPDATE CASCADE,
     episodes INTEGER NOT NULL

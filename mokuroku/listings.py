@@ -1,6 +1,6 @@
 from .object import get as db
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
 
 blueprint = Blueprint('listings', __name__, template_folder='templates')
 
@@ -17,17 +17,18 @@ ratings = {
 	10: "perfect"
 }
 
-def handle_add(shows, categories):
-	show = None
-	if not "show" in request.form:
-		return "no show specified"
-	else:
-		show = request.form['show'].strip()
-		if not show or show == "0":
+def handle_add(shows, categories, update=False):
+	if not update:
+		show = None
+		if not "show" in request.form:
 			return "no show specified"
+		else:
+			show = request.form['show'].strip()
+			if not show or show == "0":
+				return "no show specified"
 
-	if db().get_listing_by_show_id(show) != None:
-		return "listing for show already exists"
+		if db().get_listing_by_show_id(show) != None:
+			return "listing for show already exists"
 
 	category = None
 	if not "category" in request.form:
@@ -55,11 +56,16 @@ def handle_add(shows, categories):
 		try:
 			episodes = int(request.form['episodes'].strip())
 		except:
-			return "episodes was not a valid number"
+			episodes = 0
 		if episodes < 0:
 			return "episodes must be greater than one >:|"
 
-	status = db().create_listing(category, show, episodes, rating)
+	if update:
+		status = db().update_listing(update['id'], category, episodes, rating)
+		return True
+	else:
+		status = db().create_listing(category, show, episodes, rating)
+
 	if status != None:
 		return "created listing for " + shows[int(show)-1]['title']
 	else:
@@ -84,13 +90,43 @@ def add(category=None, show=None):
 @blueprint.route('/remove/', methods=['GET', 'POST'])
 @blueprint.route('/remove/<id>')
 def remove(id=None):
-	return "test"
+	try:
+		id = int(id)
+	except ValueError:
+		return render_template("error.html", error="not a valid integer")
 
-@blueprint.route('/edit/<id>')
+	db().remove_listing(id)
+	return redirect(url_for("routes.root"))
+
+@blueprint.route('/edit/<id>', methods=['GET', 'POST'])
 def edit(id=None):
-	return "test"
+	try:
+		id = int(id)
+	except ValueError:
+		return render_template("error.html", error="not a valid integer")
+
+	status = ""
+	shows = db().get_shows()
+	categories = db().get_categories()
+
+	if request.method == "POST":
+		status = handle_add(shows, categories, update={"id": id})
+		if status == True:
+			return redirect(url_for("routes.root"))
+
+	listing = db().get_listing_by_show_id(id)
+	category = listing['category']
+
+	return render_template("listing/add.html", status=status, ratings=ratings, listing=listing, shows=shows, categories=categories, category=category, show=None)
 
 @blueprint.route('/increment/', methods=['GET', 'POST'])
 @blueprint.route('/increment/<id>')
 def increment(id=None):
-	return "test"
+	if id is None:
+		return render_template("error.html", error="not a valid id")
+	try:
+		id = int(id)
+	except ValueError:
+		return render_template("error.html", error="not a valid id")
+	db().increment_listing(id, 1)
+	return redirect(url_for("routes.root"))

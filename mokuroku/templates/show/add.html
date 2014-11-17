@@ -1,15 +1,21 @@
 {% extends "base/main.html" %}
+
 {% block head %}
 <script src="{{ url_for("static", filename="js/calendarDateInput.js") }}"></script>
 {% endblock %}
+
+{% block page_title %}
+{% if show %}editing show: {{ show.title }}{% else %}{{ super() }}{% endif %}
+{% endblock %}
+
 {% block body %}
 {{ status }}
 <form method="POST">
-	<input type="text" name="title" placeholder="title"></input>
-	<textarea name="description" placeholder="description"></textarea>
-	<input type="text" name="total" placeholder="#"></input>
+	{% if show %}{% else %}<input type="text" name="title" placeholder="title"/>{% endif %}
+	<textarea name="description" placeholder="description">{% if show and show.description %}{{ show.description }}{% endif %}</textarea>
+	<input type="text" name="total" placeholder="#" value="{% if show and show.total %}{{ show.total }}{% endif %}"/>
 	begin: <script>DateInput('begin_date', false, "DD-MM-YYYY");</script>
 	end: <script>DateInput('end_date', false, "DD-MM-YYYY");</script>
-	<button>create</button>
+	<button>{% if show %}update{% else %}create{% endif %}</button>
 </form>
 {% endblock %}

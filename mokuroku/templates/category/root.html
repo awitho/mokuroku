@@ -3,7 +3,7 @@
 {% block links %}
 {% if category %}
 <a href="{{ url_for("listings.add", category=category.id) }}"><img src="{{ url_for("static", filename="imgs/add.png") }}"/></a>
-<a class="remove" href="{{ url_for("category.remove", category=category.id) }}">
+<a class="remove" href="{{ url_for("category.remove", id=category.id) }}">
 	<img src="{{ url_for("static", filename="imgs/delete.png") }}"/>
 </a>
 {% else %}
@@ -19,7 +19,7 @@
 		<a href="{{ url_for("category.root", category=listing.category.name) }}">{{ listing.category.name }}</a>
 	</span>
 	<span class='buttons'>
-		<a class="remove" for="category_{{ listing.category.id }}" href="{{ url_for("category.remove", id=listing.id) }}">
+		<a class="remove" for="category_{{ listing.category.id }}" href="{{ url_for("category.remove", id=listing.category.id) }}">
 			<img src="{{ url_for("static", filename="imgs/delete.png") }}"/>
 		</a>
 	</span>
@@ -35,14 +35,14 @@
 		●
 		<span class='rating'>{{ listing.rating }}</span>
 	</span>
-	<span for="listing_{{ listing.id }}" class="buttons">
-		<a class="increment" for="listing_{{ listing.id }}" href="{{ url_for("listings.increment", id=listing.id) }}">
+	<span for="listing_{{ listing.show.id }}" class="buttons">
+		<a class="increment" for="listing_{{ listing.show.id }}" href="{{ url_for("listings.increment", id=listing.show.id) }}">
 			<img src="{{ url_for("static", filename="imgs/add.png") }}"/>
 		</a>
-		<a class="edit" for="listing_{{ listing.id }}" href="{{ url_for("listings.edit", id=listing.id) }}">
+		<a class="edit" for="listing_{{ listing.show.id }}" href="{{ url_for("listings.edit", id=listing.show.id) }}">
 			<img src="{{ url_for("static", filename="imgs/pencil.png") }}"/>
 		</a>
-		<a class="remove" for="listing_{{ listing.id }}" href="{{ url_for("listings.remove", id=listing.id) }}">
+		<a class="remove" for="listing_{{ listing.show.id }}" href="{{ url_for("listings.remove", id=listing.show.id) }}">
 			<img src="{{ url_for("static", filename="imgs/delete.png") }}"/>
 		</a>
 	</span>

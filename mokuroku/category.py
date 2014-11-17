@@ -56,8 +56,12 @@ def add(name=None):
 	return render_template("category/add.html", status=status)
 
 @blueprint.route('/remove/')
-@blueprint.route('/remove/<category>')
-def remove(category=None):
-	if (category is None):
-		return redirect(url_for("category.root"))
-	return category
+@blueprint.route('/remove/<id>')
+def remove(id=None):
+	if not id is None:
+		try:
+			id = int(id)
+		except ValueError:
+			return render_template("error.html", error="not a valid integer")
+		db().remove_category(id)
+	return redirect(url_for("routes.root"))

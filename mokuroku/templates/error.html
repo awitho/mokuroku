@@ -1,0 +1,7 @@
+{% extends "base/main.html" %}
+{% block page_title %}
+{{ error }}
+{% endblock %}
+{% block links %}
+<a href="{{ url_for("routes.root") }}"><img src="{{ url_for("static", filename="imgs/book_previous.png") }}"/></a>
+{% endblock %}

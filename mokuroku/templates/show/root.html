@@ -1,8 +1,8 @@
 {% extends "base/main.html" %}
 {% block links %}
-<a class="increment" href="{{ url_for("listings.increment", show=show.id) }}">
+<!-- <a class="increment" href="{{ url_for("listings.increment", id="s" + show.id|string) }}">
 	<img src="{{ url_for("static", filename="imgs/add.png") }}"/>
-</a>
+</a> --> <!-- only display if show exists in listings -->
 <a class="edit" href="{{ url_for("show.edit", id=show.id) }}">
 	<img src="{{ url_for("static", filename="imgs/pencil.png") }}"/>
 </a>
@@ -17,7 +17,19 @@ show: {{ show.title }}
 {% if empty %}
 no info
 {% else %}
-has info
-{{ show }}
+
+{% if show.description %}
+<div class='entry'>description: {{ show.description }}</div>
+{% endif %}
+{% if show.begin_date %}
+<div class='entry'>began: {{ show.begin_date }}</div>
+{% endif %}
+{% if show.end_date %}
+<div class='entry'>ended: {{ show.end_date }}</div>
+{% endif %}
+{% if show.total %}
+<div class='entry'>total episodes: {{ show.total }}</div>
+{% endif %}
+
 {% endif %}
 {% endblock %}

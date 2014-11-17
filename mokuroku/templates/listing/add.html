@@ -1,7 +1,14 @@
 {% extends "base/main.html" %}
+
+
+{% block page_title %}
+{% if listing %}editing listing for: {{ shows[listing.show-1].title }}{% else %}{{ super() }}{% endif %}
+{% endblock %}
+
 {% block body %}
 {{ status }}
 <form method="POST">
+	{% if not listing %}
 	show <a href="{{ url_for("show.add") }}"><img src="{{ url_for("static", filename="imgs/add.png") }}"/></a>:
 	<select name="show">
 		<option value="0">---</option>
@@ -9,7 +16,8 @@
 			<option value="{{ sh.id }}" {% if sh.id|int == show|int %}selected{% endif %}>{{ sh.title }}</option>
 		{% endfor %}
 	</select>
-	category <a href="{{ url_for("category.add") }}"><img src="{{ url_for("static", filename="imgs/add.png") }}"/></a>:
+	{% endif %}
+	category{% if not listing %} <a href="{{ url_for("category.add") }}"><img src="{{ url_for("static", filename="imgs/add.png") }}"/></a>{% endif %}:
 	<select name="category">
 		<option value="0">---</option>
 		{% for cat in categories %}
@@ -17,13 +25,13 @@
 		{% endfor %}
 	</select>
 	episode:
-	<input type="text" name="episodes" placeholder="#"></input>
+	<input type="text" name="episodes" placeholder="#" {% if listing %}value="{{ listing.episodes }}"{% endif %}/>
 	rating:
 	<select name="rating">
 		{% for i in range(1, 11)[::-1] %}
-			<option value="{{ i }}" {% if i == 5 %}selected{% endif %}>{{ i }}: {{ ratings[i] }}</option>
+			<option value="{{ i }}" {% if listing %}{% if i == listing.rating %}selected{% endif %}{% else %}{% if i == 5 %}selected{% endif %}{% endif %}>{{ i }}: {{ ratings[i] }}</option>
 		{% endfor %}
 	</select>
-	<button>create</button>
+	<button>{% if listing %}update{% else %}create{% endif %}</button>
 </form>
 {% endblock %}

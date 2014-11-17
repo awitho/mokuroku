@@ -31,12 +31,10 @@ def verify_date(string):
 	except ValueError:
 		return False
 
-def handle_add(title):
-	if request.method == "POST":
-		title = request.form['title']
+def handle_add(title, update=False):
 	title = title.strip()
 
-	if not title:
+	if not title and not update:
 		return "must have a title"
 
 	description = None
@@ -68,22 +66,52 @@ def handle_add(title):
 			return "end date was not valid"
 		end = t
 
-	db().create_show(title, description, total, begin, end)
+	if update:
+		db().update_show(update['id'], description, total, begin, end)
+	else:
+		db().create_show(title, description, total, begin, end)
 
-	return "success! added show: " + title
+	return True
 
 @blueprint.route("/add/", methods=['POST', 'GET'])
 def add(title=None):
 	status = ""
 	if request.method == "POST" or not (title is None):
+		if request.method == "POST":
+			title = request.form['title']
 		status = handle_add(title)
+		if status is True:
+			status = "success! added show: " + title
 
 	return render_template("show/add.html", status=status)
 
-@blueprint.route("/remove/", methods=['POST', 'GET'])
+@blueprint.route("/remove/<id>")
 def remove(id=None):
-	pass
+	try:
+		id = int(id)
+	except ValueError:
+		return render_template("error.html", error="not a valid integer")
 
-@blueprint.route("/edit/", methods=['POST', 'GET'])
+	#todo: verify show exists
+
+	db().remove_show(id)
+	return redirect(url_for("routes.root"))
+
+@blueprint.route("/edit/<id>", methods=['GET', 'POST'])
 def edit(id=None):
-	pass
+	try:
+		id = int(id)
+	except ValueError:
+		return render_template("error.html", error="not a valid integer")
+
+	status = ""
+
+	#todo: verify show exists
+
+	if request.method == "POST":
+		status = handle_add("", update={"id": id})
+		if status == True:
+			return redirect(url_for("show.root", id=id))
+
+	show = db().get_show_by_id(id)
+	return render_template("show/add.html", show=show, status=status)
