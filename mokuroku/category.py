@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, url_for, redirect, request
 
 blueprint = Blueprint('category', __name__, template_folder='templates')
 
+
 @blueprint.route('/')
 @blueprint.route('/<category>')
 def root(category=None, title="listings"):
@@ -19,7 +20,7 @@ def root(category=None, title="listings"):
 					listing['show'] = db().get_show_by_id(listing['show'])
 
 				listings += c_listings
-		category = None #oops
+		category = None  # oops
 	else:
 		try:
 			category = db().get_category_by_id(int(category))
@@ -36,6 +37,7 @@ def root(category=None, title="listings"):
 		title = "category: " + category['name']
 	return render_template("category/root.html", category=category, listings=listings, title=title)
 
+
 def handle_add(name):
 	if request.method == "POST":
 			name = request.form['name']
@@ -47,6 +49,7 @@ def handle_add(name):
 
 	return "success! added category: " + name
 
+
 @blueprint.route('/add/', methods=['POST', 'GET'])
 @blueprint.route('/add/<name>')
 def add(name=None):
@@ -55,10 +58,11 @@ def add(name=None):
 		status = handle_add(name)
 	return render_template("category/add.html", status=status)
 
+
 @blueprint.route('/remove/')
 @blueprint.route('/remove/<id>')
 def remove(id=None):
-	if not id is None:
+	if id is not None:
 		try:
 			id = int(id)
 		except ValueError:

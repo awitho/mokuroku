@@ -17,10 +17,11 @@ ratings = {
 	10: "perfect"
 }
 
+
 def handle_add(shows, categories, update=False):
 	if not update:
 		show = None
-		if not "show" in request.form:
+		if "show" not in request.form:
 			return "no show specified"
 		else:
 			show = request.form['show'].strip()
@@ -31,7 +32,7 @@ def handle_add(shows, categories, update=False):
 			return "listing for show already exists"
 
 	category = None
-	if not "category" in request.form:
+	if "category" not in request.form:
 		return "no category specified"
 	else:
 		category = request.form['category'].strip()
@@ -39,7 +40,7 @@ def handle_add(shows, categories, update=False):
 			return "no show specified"
 
 	rating = None
-	if not "rating" in request.form:
+	if "rating" not in request.form:
 		return "no rating specified"
 	else:
 		try:
@@ -50,7 +51,7 @@ def handle_add(shows, categories, update=False):
 			return "rating was not in the range of 1 - 10"
 
 	episodes = None
-	if not "episodes" in request.form:
+	if "episodes" not in request.form:
 		return "no episodes specified"
 	else:
 		try:
@@ -66,8 +67,8 @@ def handle_add(shows, categories, update=False):
 	else:
 		status = db().create_listing(category, show, episodes, rating)
 
-	if status != None:
-		return "created listing for " + shows[int(show)-1]['title']
+	if status is not None:
+		return "created listing for " + shows[int(show) - 1]['title']
 	else:
 		print(status)
 		return "failed to create listing"
@@ -87,6 +88,7 @@ def add(category=None, show=None):
 
 	return render_template("listing/add.html", ratings=ratings, category=category, show=show, shows=shows, categories=categories, status=status)
 
+
 @blueprint.route('/remove/', methods=['GET', 'POST'])
 @blueprint.route('/remove/<id>')
 def remove(id=None):
@@ -97,6 +99,7 @@ def remove(id=None):
 
 	db().remove_listing(id)
 	return redirect(url_for("routes.root"))
+
 
 @blueprint.route('/edit/<id>', methods=['GET', 'POST'])
 def edit(id=None):
@@ -111,13 +114,14 @@ def edit(id=None):
 
 	if request.method == "POST":
 		status = handle_add(shows, categories, update={"id": id})
-		if status == True:
+		if status is True:
 			return redirect(url_for("routes.root"))
 
 	listing = db().get_listing_by_show_id(id)
 	category = listing['category']
 
 	return render_template("listing/add.html", status=status, ratings=ratings, listing=listing, shows=shows, categories=categories, category=category, show=None)
+
 
 @blueprint.route('/increment/', methods=['GET', 'POST'])
 @blueprint.route('/increment/<id>')

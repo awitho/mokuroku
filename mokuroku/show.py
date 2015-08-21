@@ -5,12 +5,13 @@ from flask import Blueprint, render_template, url_for, request, redirect
 
 blueprint = Blueprint('show', __name__, template_folder='templates')
 
+
 @blueprint.route('/')
 @blueprint.route('/<id>')
 def root(id=None):
 	show = None
 	empty = True
-	if not id is None:
+	if id is not None:
 		try:
 			show = db().get_show_by_id(int(id))
 		except:
@@ -24,12 +25,14 @@ def root(id=None):
 
 	return render_template("show/root.html", show=show, empty=empty)
 
+
 def verify_date(string):
 	try:
 		datetime.strptime(string, "%Y-%m-%d")
 		return True
 	except ValueError:
 		return False
+
 
 def handle_add(title, update=False):
 	title = title.strip()
@@ -73,6 +76,7 @@ def handle_add(title, update=False):
 
 	return True
 
+
 @blueprint.route("/add/", methods=['POST', 'GET'])
 def add(title=None):
 	status = ""
@@ -85,6 +89,7 @@ def add(title=None):
 
 	return render_template("show/add.html", status=status)
 
+
 @blueprint.route("/remove/<id>")
 def remove(id=None):
 	try:
@@ -92,10 +97,11 @@ def remove(id=None):
 	except ValueError:
 		return render_template("error.html", error="not a valid integer")
 
-	#todo: verify show exists
+	# todo: verify show exists
 
 	db().remove_show(id)
 	return redirect(url_for("routes.root"))
+
 
 @blueprint.route("/edit/<id>", methods=['GET', 'POST'])
 def edit(id=None):
@@ -106,11 +112,11 @@ def edit(id=None):
 
 	status = ""
 
-	#todo: verify show exists
+	# todo: verify show exists
 
 	if request.method == "POST":
 		status = handle_add("", update={"id": id})
-		if status == True:
+		if status is True:
 			return redirect(url_for("show.root", id=id))
 
 	show = db().get_show_by_id(id)
