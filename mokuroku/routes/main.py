@@ -1,6 +1,6 @@
 from . import category
 
-from flask import Blueprint, render_template, url_for, redirect
+from flask import Blueprint
 
 blueprint = Blueprint('routes', __name__, template_folder='templates')
 
