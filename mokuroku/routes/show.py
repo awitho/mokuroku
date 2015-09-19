@@ -1,4 +1,4 @@
-from .object import get as db
+from ..object import get as db
 
 import datetime
 from flask import Blueprint, render_template, url_for, request, redirect
