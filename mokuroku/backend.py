@@ -103,3 +103,6 @@ class Database(_Database):
 
 	def get_listings_in_category(self, id):
 		return self.query("SELECT * FROM listings WHERE category=?;", args=(id,))
+
+	def get_listings(self):
+		return self.query("SELECT * FROM listings;")

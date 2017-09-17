@@ -1,4 +1,5 @@
 from ..object import get as db
+from ..object import Listing, Category
 
 from flask import Blueprint, render_template, url_for, redirect, request
 
@@ -8,34 +9,13 @@ blueprint = Blueprint('category', __name__, template_folder='templates')
 @blueprint.route('/')
 @blueprint.route('/<category>')
 def root(category=None, title="listings"):
-	rows = None
-	listings = []
+	categories = []
 	if category is None:
-		for category in db().get_categories():
-			c_listings = db().get_listings_in_category(category['id'])
-
-			listings.append({"heading": True, "category": category})
-			if len(c_listings) != 0:
-				for listing in c_listings:
-					listing['show'] = db().get_show_by_id(listing['show'])
-
-				listings += c_listings
-		category = None  # oops
+		categories = Category.get_all()
 	else:
-		try:
-			category = db().get_category_by_id(int(category))
-		except ValueError:
-			category = db().get_category_by_name(category)
-
-		if category is None:
-			return redirect(url_for("category.root"))
-
-		listings = db().get_listings_in_category(category['id'])
-		for listing in listings:
-			listing['show'] = db().get_show_by_id(listing['show'])
-
-		title = "category: " + category['name']
-	return render_template("category/root.html", category=category, listings=listings, title=title)
+		categories = [Category.get(int(category))]
+		title = "category: %s" % categories[0].name
+	return render_template("category/root.html", categories=categories, title=title)
 
 
 def handle_add(name):

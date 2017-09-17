@@ -12,19 +12,18 @@
 {% endblock %}
 
 {% block body %}
-{% for listing in listings %}
-{% if "heading" in listing %}
-<div class="category listing" id="category_{{ listing.category.id }}">
+{% for category in categories %}
+<div class="category listing" id="category_{{ category.id }}">
 	<span class='entry'>
-		<a href="{{ url_for("category.root", category=listing.category.name) }}">{{ listing.category.name }}</a>
+		<a href="{{ url_for("category.root", category=category.id) }}">{{ category.name }}</a>
 	</span>
 	<span class='buttons'>
-		<a class="remove" for="category_{{ listing.category.id }}" href="{{ url_for("category.remove", id=listing.category.id) }}">
+		<a class="remove" for="category_{{ category.id }}" href="{{ url_for("category.remove", id=category.id) }}">
 			<img src="{{ url_for("static", filename="imgs/delete.png") }}"/>
 		</a>
 	</span>
 </div>
-{% else %}
+{% for listing in category.listings | sort(attribute="show.title") %}
 <div class="listing" id="listing_{{ listing.id }}">
 	<span class="entry">
 		<a href="{{ url_for("show.root", id=listing.show.id) }}">{{ listing.show.title }}</a>
@@ -47,7 +46,7 @@
 		</a>
 	</span>
 </div>
-{% endif %}
+{% endfor %}
 {% endfor %}
 
 <script type="text/javascript">

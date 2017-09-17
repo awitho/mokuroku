@@ -28,7 +28,7 @@ def handle_add(shows, categories, update=False):
 			if not show or show == "0":
 				return "no show specified"
 
-		if db().get_listing_by_show_id(show) != None:
+		if db().get_listing_by_show_id(show) is not None:
 			return "listing for show already exists"
 
 	category = None

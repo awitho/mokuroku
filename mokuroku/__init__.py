@@ -1,7 +1,9 @@
 from flask import Flask
+from .lib.flask_scss import Scss
 
 application = Flask("mokuroku")
 application.config.from_object("mokuroku.config")
+Scss(application)
 
 from .routes import main
 from .routes import category

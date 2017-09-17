@@ -32,4 +32,3 @@ CREATE TABLE listings (
                      CHECK ( rating BETWEEN 1 AND 10 )
                      DEFAULT ( 1 )
 );
-
